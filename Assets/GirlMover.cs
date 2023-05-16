@@ -27,9 +27,9 @@ public class GirlMover : MonoBehaviour
 
         //transform.position += movement * Time.deltaTime;
 
-        transform.rotation *= Quaternion.Slerp(
-            Quaternion.identity, Quaternion.LookRotation(turn < 0 ? Vector3.left : Vector3.right), Mathf.Abs(turn) * turnSpeed * Time.deltaTime
-            );
+        //transform.rotation *= Quaternion.Slerp(
+        //    Quaternion.identity, Quaternion.LookRotation(turn < 0 ? Vector3.left : Vector3.right), Mathf.Abs(turn) * turnSpeed * Time.deltaTime
+        //    );
 
         anim.SetFloat("Speed", vertical);
     }
