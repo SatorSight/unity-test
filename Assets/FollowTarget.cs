@@ -45,8 +45,8 @@ public class FollowTarget : MonoBehaviour
         Vector3 eulerRotation = transform.rotation.eulerAngles;
         //float clampedX = Mathf.Clamp(eulerRotation.x, 20f, 340f);
 
-        Debug.Log("eulerRotation.x");
-        Debug.Log(eulerRotation.x);
+        //Debug.Log("eulerRotation.x");
+        //Debug.Log(eulerRotation.x);
 
         // 300 - 50
         // 0 - 90, 270 - 360

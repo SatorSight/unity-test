@@ -7,12 +7,14 @@ public class GirlMover : MonoBehaviour
 
     public float speed = 6;
     public float turnSpeed = 2;
+    public float jumpAmount = 10;
     public Animator anim;
     private AnimatorStateInfo currentState;     // 現在のステート状態を保存する参照
     private AnimatorStateInfo previousState;    // ひとつ前のステート状態を保存する参照
     private Vector3 direction;
     public FollowTarget lookPos;
     public Camera camera;
+    private float jumpStarts;
 
 
     private Rigidbody body;
@@ -207,9 +209,14 @@ void Update()
 
 
 
+        JumpWhenNeeded();
 
+        if (isGrounded())
+        {
+            Debug.Log("isGrounded()");
+            Debug.Log(isGrounded());
 
-
+        }
 
         //if (direction != Vector3.zero)
         //{
@@ -225,6 +232,49 @@ void Update()
     private void PreventChildRotation()
     {
         lookPos.transform.rotation = Quaternion.Euler(0, -transform.rotation.y, 0);
+    }
+
+
+    private void JumpWhenNeeded()
+    {
+
+
+        if (Time.time > jumpStarts + 0.5f)
+        {
+
+            if (isGrounded())
+            {
+                anim.SetBool("Jump", false);
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+        bool isJumping = anim.GetBool("Jump");
+
+        if (isJumping == false)
+        {
+            
+
+            if (Input.GetKeyDown(KeyCode.Space) && anim.GetBool("Jump") == false)
+            {
+                anim.SetBool("Jump", true);
+                StartCoroutine(Jump());
+                //anim.SetBool("Jump", true);
+                //yield return new WaitForSeconds(1);
+                //body.AddForce(Vector3.up * jumpAmount, ForceMode.Impulse);
+                //jumpStarts = Time.time;
+            }
+        }
+
+        
     }
 
     //public void MoveInDirectionOfInput()
@@ -260,4 +310,32 @@ void Update()
     //    //body.rotation = lookAt;
 
     //}
+
+    public bool isGrounded()
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, -transform.up, out hit, 1f))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    IEnumerator Jump()
+    {
+
+        //code for starting the animation, however you are doing it
+        
+
+        //leave code and come back after a second
+        yield return new WaitForSeconds(0.15f);
+
+        //your code for jumping
+        body.AddForce(Vector3.up * jumpAmount, ForceMode.Impulse);
+        jumpStarts = Time.time;
+    }
 }
