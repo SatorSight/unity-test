@@ -60,6 +60,7 @@ void Update()
 
         Vector3 movement = Quaternion.Euler(0, camera.transform.eulerAngles.y, 0) * moveVec;
 
+        Quaternion camDirection = Quaternion.Euler(0, camera.transform.eulerAngles.y, 0);
 
 
         //Vector3 anotherVec = new Vector3(horizontal , 0, vertical);
@@ -69,20 +70,26 @@ void Update()
 
 
 
-        //transform.rotation  
-
 
 
         //transform.Translate(new Vector3(horizontal, 0, vertical) * speed * Time.deltaTime);
 
-        transform.Translate(movement);
+        transform.Translate(movement, Space.World);
 
-        //if (anotherVec != Vector3.zero)
-        //{
-        //    //body.transform.forward = anotherVec;
-        //    Quaternion toRotation = Quaternion.LookRotation(anotherVec, Vector3.up);
-        //    transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 720 * Time.deltaTime);
-        //}
+        if (movement != Vector3.zero)
+        {
+
+
+
+
+
+
+
+
+            //transform.forward = movement;
+            Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 720 * Time.deltaTime);
+        }
 
         //float turn = Input.GetAxis("Mouse X");
 
