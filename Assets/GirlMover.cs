@@ -55,10 +55,13 @@ void Update()
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Vector3 moveVec = new Vector3(horizontal * speed * Time.deltaTime, 0, vertical * speed * Time.deltaTime);
-        //moveVec.Normalize();
+        Vector3 moveVec = new Vector3(horizontal, 0, vertical);
+        moveVec.Normalize();
 
-        Vector3 movement = Quaternion.Euler(0, camera.transform.eulerAngles.y, 0) * moveVec;
+        Vector3 spedUpVec = new Vector3(moveVec.x * speed * Time.deltaTime, 0, moveVec.z * speed * Time.deltaTime);
+
+        Vector3 movement = Quaternion.Euler(0, camera.transform.eulerAngles.y, 0) * spedUpVec;
+        //movement.Normalize();
 
         Quaternion camDirection = Quaternion.Euler(0, camera.transform.eulerAngles.y, 0);
 
@@ -76,19 +79,40 @@ void Update()
 
         transform.Translate(movement, Space.World);
 
+        //Vector3 movement2 = new Vector3(movement.x, movement.y, movement.z);
+
         if (movement != Vector3.zero)
         {
 
+            //Debug.Log("movement");
+            //Debug.Log(movement);
+            //Debug.Log("camera.transform.forward");
+            //Debug.Log(camera.transform.forward);
 
+            ////Vector3 fwd = transform.forward;
 
+            //// use the 0.5f through arccos for the 30-degree demarcation
+            //// angle past which we will consider you moving backwards.
+            //if (Vector3.Dot(movement, camera.transform.forward) < -0.5f)
+            //{
+            //    movement = -movement;
+            //    // walking backwards
+            //    //gameObject.transform.forward = -move;
+            //}
 
-
-
+            Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
+            if (vertical > -0.01f)
+            {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 720 * Time.deltaTime);
+            } else
+            {
+                toRotation = Quaternion.LookRotation(-movement, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 720 * Time.deltaTime);
+            }
 
 
             //transform.forward = movement;
-            Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 720 * Time.deltaTime);
+            
         }
 
         //float turn = Input.GetAxis("Mouse X");
