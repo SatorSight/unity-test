@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class GirlMover : MonoBehaviour
 {
-
     public float speed = 6;
-    public float jumpAmount = 10;
+    public float jumpAmount = 5;
     public Animator anim;
-    private AnimatorStateInfo currentState;     // 現在のステート状態を保存する参照
-    private AnimatorStateInfo previousState;    // ひとつ前のステート状態を保存する参照
+    //private AnimatorStateInfo currentState;     // 現在のステート状態を保存する参照
+    //private AnimatorStateInfo previousState;    // ひとつ前のステート状態を保存する参照
     private Vector3 direction;
     public FollowTarget lookPos;
     public Camera camera;
-    private float jumpStarts;
-
-
+    private float jumpStarts = 0f;
+    private float groundingStarts = 0f;
     private Rigidbody body;
 
     private void Awake()
@@ -26,8 +24,8 @@ public class GirlMover : MonoBehaviour
 
     void Start()
     {
-        currentState = anim.GetCurrentAnimatorStateInfo(0);
-        previousState = currentState;
+        //currentState = anim.GetCurrentAnimatorStateInfo(0);
+        //previousState = currentState;
         camera = Camera.main;
     }
 
@@ -65,48 +63,6 @@ public class GirlMover : MonoBehaviour
             
         }
 
-        // I dont know what this code does and how its used
-
-        // ↑キー/スペースが押されたら、ステートを次に送る処理
-        if (Input.GetKeyDown("up") || Input.GetButton("Jump"))
-        {
-            // ブーリアンNextをtrueにする
-            anim.SetBool("Next", true);
-        }
-
-        // ↓キーが押されたら、ステートを前に戻す処理
-        if (Input.GetKeyDown("down"))
-        {
-            // ブーリアンBackをtrueにする
-            anim.SetBool("Back", true);
-        }
-
-        // "Next"フラグがtrueの時の処理
-        if (anim.GetBool("Next"))
-        {
-            // 現在のステートをチェックし、ステート名が違っていたらブーリアンをfalseに戻す
-            currentState = anim.GetCurrentAnimatorStateInfo(0);
-            if (previousState.nameHash != currentState.nameHash)
-            {
-                anim.SetBool("Next", false);
-                previousState = currentState;
-            }
-        }
-
-        // "Back"フラグがtrueの時の処理
-        if (anim.GetBool("Back"))
-        {
-            // 現在のステートをチェックし、ステート名が違っていたらブーリアンをfalseに戻す
-            currentState = anim.GetCurrentAnimatorStateInfo(0);
-            if (previousState.nameHash != currentState.nameHash)
-            {
-                anim.SetBool("Back", false);
-                previousState = currentState;
-            }
-        }
-
-        // end of code I didn't write
-
 
         // This defines animations transitions
         anim.SetFloat("Speed", vertical);
@@ -114,75 +70,53 @@ public class GirlMover : MonoBehaviour
 
         // inside we detect if jump key is pressed and if character can jump
         JumpWhenNeeded();
-
-        if (isGrounded())
-        {
-            Debug.Log("isGrounded()");
-            Debug.Log(isGrounded());
-        }
-
     }
 
 
     private void JumpWhenNeeded()
     {
-
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (CanJump())
             {
-                StartCoroutine(Jump());
-            }
-        }
-
-
-
-
-
-
-
-
-
-        if (Time.time > jumpStarts + 0.5f)
-        {
-
-            if (isGrounded())
-            {
-                anim.SetBool("Jump", false);
-            }
-
-
-        }
-
-        bool isJumping = anim.GetBool("Jump");
-
-        if (isJumping == false)
-        {
-            
-
-            if (Input.GetKeyDown(KeyCode.Space) && anim.GetBool("Jump") == false)
-            {
                 anim.SetBool("Jump", true);
+                jumpStarts = Time.time;
                 StartCoroutine(Jump());
             }
         }
 
-        
+        if (anim.GetBool("Jump"))
+        {
+            // because character is grounded by default, we can only detect if jump is over after detecting second grounding
+            // so we check for grounding only while characher is midair
+            if (Time.time > jumpStarts + 0.5f)
+            {
+                if (isGrounded())
+                {
+                    groundingStarts = Time.time;
+                    anim.SetBool("Jump", false);
+                }
+            }
+        }
     }
 
     private bool CanJump()
     {
-        if (anim.GetBool("Jump"))
+        if (anim.GetBool("Jump") == true)
         {
             return false;
         }
 
+        if (Time.time < groundingStarts + 0.2f)
+        {
+            return false;
+        }
 
+        return true;
     }
 
     // detect if character hits the ground, though being triggered two times: when jump starts and when it ends
-    public bool isGrounded()
+    private bool isGrounded()
     {
         RaycastHit hit;
 
@@ -199,15 +133,7 @@ public class GirlMover : MonoBehaviour
     // needed for coroutine cause we need to delay the jump so animation matches the jump
     IEnumerator Jump()
     {
-
-        //code for starting the animation, however you are doing it
-        
-
-        //leave code and come back after a second
         yield return new WaitForSeconds(0.15f);
-
-        //your code for jumping
         body.AddForce(Vector3.up * jumpAmount, ForceMode.Impulse);
-        jumpStarts = Time.time;
     }
 }

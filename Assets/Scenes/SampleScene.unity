@@ -542,7 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
-  jumpAmount: 10
+  jumpAmount: 5
   anim: {fileID: 916159114}
   lookPos: {fileID: 678695359}
   camera: {fileID: 963194227}
