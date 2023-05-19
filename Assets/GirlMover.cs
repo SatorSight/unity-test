@@ -127,6 +127,23 @@ public class GirlMover : MonoBehaviour
     private void JumpWhenNeeded()
     {
 
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (CanJump())
+            {
+                StartCoroutine(Jump());
+            }
+        }
+
+
+
+
+
+
+
+
+
         if (Time.time > jumpStarts + 0.5f)
         {
 
@@ -152,6 +169,16 @@ public class GirlMover : MonoBehaviour
         }
 
         
+    }
+
+    private bool CanJump()
+    {
+        if (anim.GetBool("Jump"))
+        {
+            return false;
+        }
+
+
     }
 
     // detect if character hits the ground, though being triggered two times: when jump starts and when it ends
