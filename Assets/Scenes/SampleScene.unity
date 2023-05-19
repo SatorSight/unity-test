@@ -270,7 +270,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnSpeed: 2
-  viewRange: 60
   camera: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
@@ -543,7 +542,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
-  turnSpeed: 2
   jumpAmount: 10
   anim: {fileID: 916159114}
   lookPos: {fileID: 678695359}
@@ -567,7 +565,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 2
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!65 &916159130
 BoxCollider:
@@ -641,7 +639,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnSpeed: 2
-  viewRange: 60
   camera: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
