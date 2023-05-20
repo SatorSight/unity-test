@@ -7,11 +7,12 @@ public class GirlMover : MonoBehaviour
     public float speed = 6;
     public float jumpAmount = 5;
     public Animator anim;
-    //private AnimatorStateInfo currentState;     // 現在のステート状態を保存する参照
-    //private AnimatorStateInfo previousState;    // ひとつ前のステート状態を保存する参照
     private Vector3 direction;
     public FollowTarget lookPos;
     public Camera camera;
+
+    // from 0 to 2, because there are 3 key items in the game
+    public int inventory = 0;
     private float jumpStarts = 0f;
     private float groundingStarts = 0f;
     private Rigidbody body;
@@ -72,6 +73,10 @@ public class GirlMover : MonoBehaviour
         JumpWhenNeeded();
     }
 
+    public void addToInventory()
+    {
+        inventory += 1;
+    }
 
     private void JumpWhenNeeded()
     {
